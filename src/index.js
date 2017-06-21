@@ -4,7 +4,7 @@ import './index.css';
 
 function Square(props) {
     return (
-      <button className="square" onClick={props.onClick}>
+      <button className="square" style={props.color} onClick={props.onClick}>
         {props.value}
       </button>
     );
@@ -16,17 +16,22 @@ class Board extends React.Component {
     this.state = {
       squares: Array(9).fill(null),
       xIsNext: true,
+      squaresColor: Array(9).fill(null),
     };
   }
 
   handleClick(i) {
       const squares = this.state.squares.slice();
 
+      const squaresColor = this.state.squaresColor.slice();
+
       squares[i] = this.state.xIsNext ? 'X' : 'O';
+      squaresColor[i] = {background: 'red'}
 
       this.setState({
         squares: squares,
         xIsNext: !this.state.xIsNext,
+        squaresColor: squaresColor,
       });
   }
 
@@ -34,7 +39,7 @@ class Board extends React.Component {
 
   renderSquare(i) {
     return <Square
-      value={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
+      value={this.state.squares[i]} color={this.state.squaresColor[i]} onClick={() => this.handleClick(i)} />;
   }
 
   render() {
