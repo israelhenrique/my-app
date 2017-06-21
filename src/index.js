@@ -26,6 +26,8 @@ class Board extends React.Component {
       squares: Array(9).fill(null),
       xIsNext: true,
       squaresColor: Array(9).fill(null),
+      movesCount: 0,
+      winner: null,
     };
   }
 
@@ -33,8 +35,11 @@ class Board extends React.Component {
 
       const squares = this.state.squares.slice();
 
-      if (squares[i] != null){
-        alert("Click in a empty square!")
+      if(this.state.winner){
+        alert('Start a new game!')
+        return
+      }else if (squares[i] != null){
+        alert('Click in a empty square!')
         return
       }
 
@@ -48,6 +53,8 @@ class Board extends React.Component {
         squares: squares,
         xIsNext: !this.state.xIsNext,
         squaresColor: squaresColor,
+        movesCount: this.state.movesCount+1,
+        winner: calculateWinner(squares)
       });
   }
 
@@ -58,6 +65,8 @@ class Board extends React.Component {
       squares: squares,
       xIsNext: true,
       squaresColor: squaresColor,
+      movesCount: 0,
+      winner: null
     });
 
   }
@@ -68,12 +77,15 @@ class Board extends React.Component {
   }
 
   render() {
-    const winner = calculateWinner(this.state.squares);
+    const winner = this.state.winner;
     let status;
     if (winner) {
       status = 'Winner: ' + winner;
-    } else {
+    } else if (this.state.movesCount !== 9) {
+      console.log(this.state.movesCount)
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    } else {
+      status = 'A tie!';
     }
 
     return (
