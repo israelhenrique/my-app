@@ -10,6 +10,15 @@ function Square(props) {
     );
 }
 
+function Button(props){
+    return (
+      <button className="button" onClick={props.onClick}>
+        New Game
+      </button>
+    );
+}
+
+
 class Board extends React.Component {
   constructor() {
     super();
@@ -26,7 +35,7 @@ class Board extends React.Component {
       const squaresColor = this.state.squaresColor.slice();
 
       squares[i] = this.state.xIsNext ? 'X' : 'O';
-      squaresColor[i] = this.state.xIsNext ? {background: 'red'} : {background: 'green'} 
+      squaresColor[i] = this.state.xIsNext ? {background: 'red'} : {background: 'green'}
 
       this.setState({
         squares: squares,
@@ -35,7 +44,16 @@ class Board extends React.Component {
       });
   }
 
+  newGame(){
+    const squares = Array(9).fill(null)
+    const squaresColor =  Array(9).fill(null)
+    this.setState({
+      squares: squares,
+      xIsNext: true,
+      squaresColor: squaresColor,
+    });
 
+  }
 
   renderSquare(i) {
     return <Square
@@ -69,6 +87,7 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
+        <Button onClick={() => this.newGame()}/>
       </div>
     );
   }
