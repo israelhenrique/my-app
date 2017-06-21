@@ -30,7 +30,14 @@ class Board extends React.Component {
   }
 
   handleClick(i) {
+
       const squares = this.state.squares.slice();
+
+      if (squares[i] != null){
+        alert("Click in a empty square!")
+        return
+      }
+
 
       const squaresColor = this.state.squaresColor.slice();
 
