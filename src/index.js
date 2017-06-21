@@ -26,7 +26,7 @@ class Board extends React.Component {
       const squaresColor = this.state.squaresColor.slice();
 
       squares[i] = this.state.xIsNext ? 'X' : 'O';
-      squaresColor[i] = {background: 'red'}
+      squaresColor[i] = this.state.xIsNext ? {background: 'red'} : {background: 'green'} 
 
       this.setState({
         squares: squares,
