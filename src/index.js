@@ -23,8 +23,18 @@ class Board extends React.Component {
   constructor() {
     super();
 
-    const player1 = prompt('Enter player 1 name')
-    const player2 = prompt('Enter player 2 name')
+    let player1 = prompt('Enter player 1 name')
+    let player2 = prompt('Enter player 2 name')
+
+    if (player1 === null || player1 === '')
+      player1 = 'X'
+    if (player2 === null || player1 === '')
+      player2 = 'O'
+    if (player1 === player2) {
+      player1 = player1 + ' (X)'
+      player2 = player2 + ' (O)'
+    }
+
 
     this.state = {
       players : {player1: player1, player2: player2},
@@ -164,7 +174,7 @@ class Board extends React.Component {
         </div>
         <Button value='New Game' onClick={() => this.newGame()}/>
         <Button value='New Match' onClick={() => this.newMatch()}/>
-        <div><p>{this.state.players.player1+' '+this.state.scores[0]+' X '+this.state.scores[1]+' '+this.state.players.player2}</p></div>
+        <div><p>{this.state.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.state.players.player2}</p></div>
       </div>
     );
   }
