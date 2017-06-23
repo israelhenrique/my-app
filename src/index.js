@@ -26,14 +26,15 @@ class Board extends React.Component {
     let player1 = prompt('Enter player 1 name')
     let player2 = prompt('Enter player 2 name')
 
-    if (player1 === null || player1 === '')
-      player1 = 'X'
-    if (player2 === null || player1 === '')
-      player2 = 'O'
-    if (player1 === player2) {
+    if(player1 === player2) {
+      console.log('Teste')
       player1 = player1 + ' (X)'
       player2 = player2 + ' (O)'
-    }
+    } else if (player1 === null || player1 === '')
+      player1 = 'X'
+    else if (player2 === null || player1 === '')
+      player2 = 'O'
+
 
 
     this.state = {
