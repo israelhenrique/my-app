@@ -26,19 +26,8 @@ class Board extends React.Component {
     let player1 = prompt('Enter player 1 name')
     let player2 = prompt('Enter player 2 name')
 
-    if(player1 === player2) {
-      console.log('Teste')
-      player1 = player1 + ' (X)'
-      player2 = player2 + ' (O)'
-    } else if (player1 === null || player1 === '')
-      player1 = 'X'
-    else if (player2 === null || player1 === '')
-      player2 = 'O'
-
-
-
     this.state = {
-      players : {player1: player1, player2: player2},
+      players : setPlayers(player1,player2),
       scores : Array(2).fill(0),
       squares: Array(9).fill(null),
       xIsNext: true,
@@ -124,11 +113,11 @@ class Board extends React.Component {
     const squares = Array(9).fill(null)
     const squaresColor =  Array(9).fill(null)
 
-    const player1 = prompt('Enter player 1 name')
-    const player2 = prompt('Enter player 2 name')
+    let player1 = prompt('Enter player 1 name')
+    let player2 = prompt('Enter player 2 name')
 
     this.setState({
-      players : {player1: player1, player2: player2},
+      players : setPlayers(player1,player2),
       scores : Array(2).fill(0),
       squares: squares,
       xIsNext: true,
@@ -204,6 +193,22 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+
+function setPlayers(player1, player2){
+
+  if(player1 !== null && player1 === player2) {
+    console.log('Teste')
+    player1 = player1 + ' (X)'
+    player2 = player2 + ' (O)'
+  }
+  if (player1 === null || player1 === '')
+    player1 = 'X'
+  if (player2 === null || player2 === '')
+    player2 = 'O'
+
+    return {player1: player1, player2: player2}
+
+}
 
 function calculateWinner(squares, players) {
   const lines = [
