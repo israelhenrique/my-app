@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
 function Square(props) {
     return (
       <button className="square" style={props.color} onClick={props.onClick}>
@@ -186,10 +187,68 @@ class Game extends React.Component {
   }
 }
 
+class StartForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+
+  }
+
+  handleClick(){
+    this.props._handleStartFormSubmit(this.state.value) //O método handleClick chama o handle passado em props?
+  }
+
+  render() {
+    return(
+      <div>
+        <label>Player 1</label>
+        <input type="text" value={this.state.value} onChange={this.handleChange} />
+        <button onClick={this.handleClick}>Botão</button> //Imagino que o evento onClick do botão chama a função handleClick
+      </div>
+      )
+  }
+
+
+}
+
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      players : Array(2).fill(0),
+      started : false
+    };
+  }
+  _handleStartFormSubmit(player) {
+    console.log(player)
+    this.setState({
+      started : !this.state.started,
+    });
+  }
+
+  render() {
+    return(
+      <div>
+        {this.state.started ? (
+          <Game players={this.state.players} />
+        ) : (
+          <StartForm _handleStartFormSubmit={() => this._handleStartFormSubmit()} /> //Preciso passar parametros aqui? Suponho que o problema esteja aqui
+        )}
+      </div>
+    )
+  }
+}
+
 // ========================================
 
 ReactDOM.render(
-  <Game />,
+  <App />,
   document.getElementById('root')
 );
 
