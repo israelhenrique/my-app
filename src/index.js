@@ -24,11 +24,10 @@ class Board extends React.Component {
   constructor() {
     super();
 
-    let player1 = prompt('Enter player 1 name')
-    let player2 = prompt('Enter player 2 name')
+    //let player1 = prompt('Enter player 1 name')
+    //let player2 = prompt('Enter player 2 name')
 
     this.state = {
-      players : setPlayers(player1,player2),
       scores : Array(2).fill(0),
       squares: Array(9).fill(null),
       xIsNext: true,
@@ -43,7 +42,7 @@ class Board extends React.Component {
 
     const scores = this.state.scores.slice()
 
-    if (winner === this.state.players.player1){
+    if (winner === this.props.players.player1){
 
       scores[0]++;
       console.log('entrou')
@@ -79,7 +78,7 @@ class Board extends React.Component {
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       squaresColor[i] = this.state.xIsNext ? {background: 'red'} : {background: 'green'}
 
-      const winner = calculateWinner(squares,this.state.players)
+      const winner = calculateWinner(squares,this.props.players)
 
       if (winner !== null){
 
@@ -140,7 +139,7 @@ class Board extends React.Component {
     if (winner) {
       status = 'Winner: ' + winner;
     } else if (this.state.movesCount !== 9) {
-      status = 'Next player: ' + (this.state.xIsNext ? this.state.players.player1 : this.state.players.player2);
+      status = 'Next player: ' + (this.state.xIsNext ? this.props.players.player1 : this.props.players.player2);
     } else {
       status = 'A tie!';
     }
@@ -165,7 +164,7 @@ class Board extends React.Component {
         </div>
         <Button value='New Game' onClick={() => this.newGame()}/>
         <Button value='New Match' onClick={() => this.newMatch()}/>
-        <div><p>{this.state.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.state.players.player2}</p></div>
+        <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
       </div>
     );
   }
@@ -176,7 +175,8 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board players={this.props.players}  />
+          {console.log(this.props.players)}
         </div>
         <div className="game-info">
           <div></div>
@@ -190,26 +190,37 @@ class Game extends React.Component {
 class StartForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {player1: '', player2: ''};
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
 
   }
 
   handleClick(){
-    this.props._handleStartFormSubmit(this.state.value) //O método handleClick chama o handle passado em props?
+    const players = {player1: this.state.player1, player2: this.state.player2}
+    this.props._handleStartFormSubmit(players) //O método handleClick chama o handle passado em props?
   }
 
   render() {
     return(
       <div>
         <label>Player 1</label>
-        <input type="text" value={this.state.value} onChange={this.handleChange} />
-        <button onClick={this.handleClick}>Botão</button> //Imagino que o evento onClick do botão chama a função handleClick
+        <input name="player1" type="text" value={this.state.player1} onChange={this.handleChange} />
+        <br/>
+        <label>Player 2</label>
+        <input name="player2" type="text" value={this.state.player2} onChange={this.handleChange} />
+        <br/>
+        <button onClick={this.handleClick}>Botão</button>
       </div>
       )
   }
@@ -221,13 +232,14 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      players : Array(2).fill(0),
+      players : '',
       started : false
     };
   }
-  _handleStartFormSubmit(player) {
-    console.log(player)
+  _handleStartFormSubmit(players) {
+    //console.log(players)
     this.setState({
+      players: players,
       started : !this.state.started,
     });
   }
@@ -238,7 +250,7 @@ class App extends React.Component {
         {this.state.started ? (
           <Game players={this.state.players} />
         ) : (
-          <StartForm _handleStartFormSubmit={() => this._handleStartFormSubmit()} /> //Preciso passar parametros aqui? Suponho que o problema esteja aqui
+          <StartForm _handleStartFormSubmit={(players) => this._handleStartFormSubmit(players)} /> //Preciso passar parametros aqui? Suponho que o problema esteja aqui
         )}
       </div>
     )
