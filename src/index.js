@@ -45,7 +45,6 @@ class Board extends React.Component {
     if (winner === this.props.players.player1){
 
       scores[0]++;
-      console.log('entrou')
 
     } else {
 
@@ -113,11 +112,10 @@ class Board extends React.Component {
     const squares = Array(9).fill(null)
     const squaresColor =  Array(9).fill(null)
 
-    let player1 = prompt('Enter player 1 name')
-    let player2 = prompt('Enter player 2 name')
+
+    this.props.handleNewGame()
 
     this.setState({
-      players : setPlayers(player1,player2),
       scores : Array(2).fill(0),
       squares: squares,
       xIsNext: true,
@@ -175,8 +173,7 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board players={this.props.players}  />
-          {console.log(this.props.players)}
+          <Board players={this.props.players} handleNewGame={this.props.handleNewGame} />
         </div>
         <div className="game-info">
           <div></div>
@@ -244,11 +241,17 @@ class App extends React.Component {
     });
   }
 
+  handleNewGame(){
+    this.setState({
+      started : !this.state.started,
+    });
+  }
+
   render() {
     return(
       <div>
         {this.state.started ? (
-          <Game players={this.state.players} />
+          <Game players={this.state.players} handleNewGame={() => this.handleNewGame()}/>
         ) : (
           <StartForm _handleStartFormSubmit={(players) => this._handleStartFormSubmit(players)} /> //Preciso passar parametros aqui? Suponho que o problema esteja aqui
         )}
@@ -265,7 +268,7 @@ ReactDOM.render(
 );
 
 
-function setPlayers(player1, player2){
+/*function setPlayers(player1, player2){
 
   if(player1 !== null && player1 === player2) {
     console.log('Teste')
@@ -279,7 +282,7 @@ function setPlayers(player1, player2){
 
     return {player1: player1, player2: player2}
 
-}
+}*/
 
 function calculateWinner(squares, players) {
   const lines = [
