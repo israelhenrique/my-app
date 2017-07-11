@@ -204,7 +204,7 @@ class StartForm extends React.Component {
   }
 
   handleClick(){
-    const players = {player1: this.state.player1, player2: this.state.player2}
+    const players = setPlayers(this.state.player1, this.state.player2)
     this.props._handleStartFormSubmit(players) //O método handleClick chama o handle passado em props?
   }
 
@@ -268,10 +268,9 @@ ReactDOM.render(
 );
 
 
-/*function setPlayers(player1, player2){
+function setPlayers(player1, player2){
 
   if(player1 !== null && player1 === player2) {
-    console.log('Teste')
     player1 = player1 + ' (X)'
     player2 = player2 + ' (O)'
   }
@@ -282,7 +281,7 @@ ReactDOM.render(
 
     return {player1: player1, player2: player2}
 
-}*/
+}
 
 function calculateWinner(squares, players) {
   const lines = [
