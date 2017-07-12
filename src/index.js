@@ -34,7 +34,13 @@ class Board extends React.Component {
       squaresColor: Array(9).fill(null),
       movesCount: 0,
       winner: null,
+      seconds: 10
     };
+
+    this.counter = 0;
+
+    this.startCountdown = this.startCountdown.bind(this);
+    this.countDown = this.countDown.bind(this);
   }
 
 
@@ -98,12 +104,14 @@ class Board extends React.Component {
   newMatch(){
     const squares = Array(9).fill(null)
     const squaresColor =  Array(9).fill(null)
+    this.counter = 0;
     this.setState({
       squares: squares,
       xIsNext: true,
       squaresColor: squaresColor,
       movesCount: 0,
-      winner: null
+      winner: null,
+      seconds: 10,
     });
 
   }
@@ -131,20 +139,44 @@ class Board extends React.Component {
       value={this.state.squares[i]} color={this.state.squaresColor[i]} onClick={() => this.handleClick(i)} />;
   }
 
+  startCountdown(){
+
+      if (this.counter === 0) {
+        this.counter = setInterval(this.countDown,1000)
+      }
+  }
+
+  countDown() {
+    let seconds = this.state.seconds - 1;
+    this.setState({
+      seconds: seconds,
+    });
+
+
+    if (seconds <= 0) {
+      clearInterval(this.counter);
+      this.newMatch()
+    }
+  }
+
   render() {
     const winner = this.state.winner;
     let status;
+    let restart = false;
     if (winner) {
       status = 'Winner: ' + winner;
+      restart = true;
+      this.startCountdown();
     } else if (this.state.movesCount !== 9) {
       status = 'Next player: ' + (this.state.xIsNext ? this.props.players.player1 : this.props.players.player2);
     } else {
       status = 'A tie!';
+      restart = true;
     }
 
     return (
       <div>
-        <div className="status">{status}</div>
+        <div className="status">{status+(restart ? ' - The match will restart in '+this.state.seconds+' seconds...' : '')}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -161,7 +193,6 @@ class Board extends React.Component {
           {this.renderSquare(8)}
         </div>
         <Button value='New Game' onClick={() => this.newGame()}/>
-        <Button value='New Match' onClick={() => this.newMatch()}/>
         <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
       </div>
     );
