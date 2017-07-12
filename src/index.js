@@ -62,6 +62,21 @@ class Board extends React.Component {
 
   }
 
+  resetScore(){
+
+    const scores = this.state.scores.slice()
+
+    scores[0] = 0;
+
+    scores[1] = 0;
+
+    this.setState({
+      scores: scores,
+
+    });
+
+  }
+
   handleClick(i) {
 
       const squares = this.state.squares.slice();
@@ -183,7 +198,8 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
-        <Button value='Reset' onClick={() => this.newGame()}/>
+        <Button value='Reset Game' onClick={() => this.newGame()}/>
+        <Button value='Reset Statistics' onClick={() => this.resetScore()}/>
         <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
       </div>
     );
