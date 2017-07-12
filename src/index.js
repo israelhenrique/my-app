@@ -225,21 +225,24 @@ class StartForm extends React.Component {
 
   }
 
-  handleClick(){
+  handleClick(event){
     const players = setPlayers(this.state.player1, this.state.player2)
     this.props._handleStartFormSubmit(players) //O método handleClick chama o handle passado em props?
+    event.preventDefault();
   }
 
   render() {
     return(
       <div>
-        <label>Player 1</label>
-        <input name="player1" type="text" value={this.state.player1} onChange={this.handleChange} />
-        <br/>
-        <label>Player 2</label>
-        <input name="player2" type="text" value={this.state.player2} onChange={this.handleChange} />
-        <br/>
-        <button onClick={this.handleClick}>Botão</button>
+        <form onSubmit={this.handleClick}>
+          <label>Player 1</label>
+          <input name="player1" type="text" value={this.state.player1} onChange={this.handleChange} />
+          <br/>
+          <label>Player 2</label>
+          <input name="player2" type="text" value={this.state.player2} onChange={this.handleChange} />
+          <br/>
+          <input type="submit" />
+        </form>
       </div>
       )
   }
