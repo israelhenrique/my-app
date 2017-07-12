@@ -183,7 +183,7 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
-        <Button value='New Game' onClick={() => this.newGame()}/>
+        <Button value='Reset' onClick={() => this.newGame()}/>
         <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
       </div>
     );
