@@ -7,6 +7,10 @@ ol, ul {
   padding-left: 30px;
 }
 
+.board-row {
+  height: 34px;
+}
+
 .board-row:after {
   clear: both;
   content: "";
@@ -26,7 +30,7 @@ ol, ul {
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
-  margin-top: -1px;
+  margin-top: -2px;
   padding: 0;
   text-align: center;
   width: 34px;

@@ -24,9 +24,6 @@ class Board extends React.Component {
   constructor() {
     super();
 
-    //let player1 = prompt('Enter player 1 name')
-    //let player2 = prompt('Enter player 2 name')
-
     this.state = {
       scores : Array(2).fill(0),
       squares: Array(9).fill(null),
@@ -69,14 +66,8 @@ class Board extends React.Component {
 
       const squares = this.state.squares.slice();
 
-      if(this.state.winner){
-        alert('Start a new game!')
+      if(this.state.winner || squares[i] != null)
         return
-      }else if (squares[i] != null){
-        alert('Click in a empty square!')
-        return
-      }
-
 
       const squaresColor = this.state.squaresColor.slice();
 
