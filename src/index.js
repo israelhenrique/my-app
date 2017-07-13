@@ -126,6 +126,8 @@ class Board extends React.Component {
     const squares = Array(9).fill(null)
     const squaresColor =  Array(9).fill(null)
 
+    if (this.counter !== 0)
+      clearInterval(this.counter);
 
     this.props.handleNewGame()
 
