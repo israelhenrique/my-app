@@ -31,13 +31,10 @@ class Board extends React.Component {
       squaresColor: Array(9).fill(null),
       movesCount: 0,
       winner: null,
-      seconds: 10
     };
 
-    this.counter = 0;
+    this.newMatch = this.newMatch.bind(this);
 
-    this.startCountdown = this.startCountdown.bind(this);
-    this.countDown = this.countDown.bind(this);
   }
 
 
@@ -123,48 +120,14 @@ class Board extends React.Component {
   }
 
   newGame(){
-    const squares = Array(9).fill(null)
-    const squaresColor =  Array(9).fill(null)
-
-    if (this.counter !== 0)
-      clearInterval(this.counter);
 
     this.props.handleNewGame()
-
-    this.setState({
-      scores : Array(2).fill(0),
-      squares: squares,
-      xIsNext: true,
-      squaresColor: squaresColor,
-      movesCount: 0,
-      winner: null
-    });
 
   }
 
   renderSquare(i) {
     return <Square
       value={this.state.squares[i]} color={this.state.squaresColor[i]} onClick={() => this.handleClick(i)} />;
-  }
-
-  startCountdown(){
-
-      if (this.counter === 0) {
-        this.counter = setInterval(this.countDown,1000)
-      }
-  }
-
-  countDown() {
-    let seconds = this.state.seconds - 1;
-    this.setState({
-      seconds: seconds,
-    });
-
-
-    if (seconds <= 0) {
-      clearInterval(this.counter);
-      this.newMatch()
-    }
   }
 
   render() {
@@ -174,7 +137,6 @@ class Board extends React.Component {
     if (winner) {
       status = 'Winner: ' + winner;
       restart = true;
-      this.startCountdown();
     } else if (this.state.movesCount !== 9) {
       status = 'Next player: ' + (this.state.xIsNext ? this.props.players.player1 : this.props.players.player2);
     } else {
@@ -184,7 +146,15 @@ class Board extends React.Component {
 
     return (
       <div>
-        <div className="status">{status+(restart ? ' - The match will restart in '+this.state.seconds+' seconds...' : '')}</div>
+        <div className="status">{status}</div>
+        <div>
+          {restart ? (
+            <Counter onZero={this.newMatch}/>
+          ) : (
+            ''
+          )}
+        </div>
+        <br />
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -222,6 +192,51 @@ class Game extends React.Component {
       </div>
     );
   }
+}
+
+class Counter extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      seconds: 10
+    };
+
+    this.counter = 0;
+
+    this.countDown = this.countDown.bind(this);
+
+  }
+
+  componentWillMount(){
+    if (this.counter === 0) {
+      this.counter = setInterval(this.countDown,1000)
+    }
+  }
+
+  countDown() {
+    let seconds = this.state.seconds - 1;
+
+    this.setState({
+      seconds: seconds,
+    });
+
+
+    if (seconds <= 0) {
+      clearInterval(this.counter);
+      this.props.onZero();
+    }
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.counter);
+  }
+
+  render(){
+    return(
+      <div>{'The match will restart in '+this.state.seconds+' seconds...'}</div>
+    );
+  }
+
 }
 
 class StartForm extends React.Component {
