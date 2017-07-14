@@ -113,7 +113,10 @@ class Board extends React.Component {
         <div className="status">{status}</div>
         <div>
           {restart ? (
-            <Counter onZero={this.newMatch}/>
+            <div>
+              <p>The match will restart in <Counter onZero={this.newMatch} startTime='10'/> seconds... </p>
+              <a href="#" onClick={this.newMatch}>Restart now!</a>
+            </div>
           ) : (
             ''
           )}
@@ -196,14 +199,16 @@ class Counter extends React.Component {
   constructor() {
     super();
     this.state = {
-      seconds: 10
+      seconds: 0
     };
     this.counter = 0;
     this.countDown = this.countDown.bind(this)
-    this.handleClick = this.handleClick.bind(this)
   }
 
   componentWillMount(){
+    this.setState({
+      seconds: this.props.startTime,
+    });
     if (this.counter === 0) {
       this.counter = setInterval(this.countDown,1000)
     }
@@ -224,22 +229,13 @@ class Counter extends React.Component {
     clearInterval(this.counter);
   }
 
-  handleClick(event){
-    event.preventDefault()
-    clearInterval(this.counter);
-    this.props.onZero()
-
-  }
-
   render(){
     return(
-      <div>
-        {'The match will restart in '+this.state.seconds+' seconds...'}
-        <br/><a href="#" onClick={this.handleClick}>Restart now!</a>
-      </div>
+      <span>
+        {this.state.seconds}
+      </span>
     );
   }
-
 }
 
 class StartForm extends React.Component {
@@ -281,8 +277,6 @@ class StartForm extends React.Component {
       </div>
       )
   }
-
-
 }
 
 class App extends React.Component {
