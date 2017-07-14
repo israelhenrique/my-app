@@ -119,12 +119,6 @@ class Board extends React.Component {
 
   }
 
-  newGame(){
-
-    this.props.handleNewGame()
-
-  }
-
   renderSquare(i) {
     return <Square
       value={this.state.squares[i]} color={this.state.squaresColor[i]} onClick={() => this.handleClick(i)} />;
@@ -170,7 +164,6 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
-        <Button value='Reset Game' onClick={() => this.newGame()}/>
         <Button value='Reset Statistics' onClick={() => this.resetScore()}/>
         <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
       </div>
@@ -179,11 +172,19 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+
+  newGame(){
+
+    this.props.handleNewGame()
+
+  }
+
   render() {
     return (
       <div className="game">
         <div className="game-board">
-          <Board players={this.props.players} handleNewGame={this.props.handleNewGame} />
+          <Button value='Reset Game' onClick={() => this.newGame()}/>
+          <Board players={this.props.players}  />
         </div>
         <div className="game-info">
           <div></div>
