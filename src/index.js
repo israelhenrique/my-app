@@ -203,7 +203,8 @@ class Counter extends React.Component {
 
     this.counter = 0;
 
-    this.countDown = this.countDown.bind(this);
+    this.countDown = this.countDown.bind(this)
+    this.handleClick = this.handleClick.bind(this)
 
   }
 
@@ -231,9 +232,19 @@ class Counter extends React.Component {
     clearInterval(this.counter);
   }
 
+  handleClick(event){
+    event.preventDefault()
+    clearInterval(this.counter);
+    this.props.onZero()
+
+  }
+
   render(){
     return(
-      <div>{'The match will restart in '+this.state.seconds+' seconds...'}</div>
+      <div>
+        {'The match will restart in '+this.state.seconds+' seconds...'}
+        <br/><a href="#" onClick={this.handleClick}>Restart now!</a>
+      </div>
     );
   }
 
