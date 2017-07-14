@@ -23,78 +23,49 @@ function Button(props){
 class Board extends React.Component {
   constructor() {
     super();
-
     this.state = {
-      scores : Array(2).fill(0),
+      //scores : Array(2).fill(0),
       squares: Array(9).fill(null),
       xIsNext: true,
       squaresColor: Array(9).fill(null),
       movesCount: 0,
       winner: null,
     };
-
     this.newMatch = this.newMatch.bind(this);
-
   }
 
-
-  refreshScore(winner){
-
+  /*refreshScore(winner){
     const scores = this.state.scores.slice()
-
     if (winner === this.props.players.player1){
-
       scores[0]++;
-
     } else {
-
       scores[1]++;
-
     }
-
     this.setState({
       scores: scores,
-
     });
-
   }
 
   resetScore(){
-
     const scores = this.state.scores.slice()
-
     scores[0] = 0;
-
     scores[1] = 0;
-
     this.setState({
       scores: scores,
-
     });
-
-  }
+  }*/
 
   handleClick(i) {
-
       const squares = this.state.squares.slice();
-
       if(this.state.winner || squares[i] != null)
         return
-
       const squaresColor = this.state.squaresColor.slice();
-
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       squaresColor[i] = this.state.xIsNext ? {background: 'red'} : {background: 'green'}
-
       const winner = calculateWinner(squares,this.props.players)
-
       if (winner !== null){
-
-        this.refreshScore(winner)
-
+        this.props.refreshScore(winner)
       }
-
-
       this.setState({
         squares: squares,
         xIsNext: !this.state.xIsNext,
@@ -137,7 +108,6 @@ class Board extends React.Component {
       status = 'A tie!';
       restart = true;
     }
-
     return (
       <div>
         <div className="status">{status}</div>
@@ -164,19 +134,44 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
-        <Button value='Reset Statistics' onClick={() => this.resetScore()}/>
-        <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
       </div>
     );
   }
 }
 
 class Game extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      scores : Array(2).fill(0),
+      winner: null,
+    };
+    this.refreshScore = this.refreshScore.bind(this);
+  }
 
   newGame(){
-
     this.props.handleNewGame()
+  }
 
+  refreshScore(winner){
+    const scores = this.state.scores.slice()
+    if (winner === this.props.players.player1){
+      scores[0]++;
+    } else {
+      scores[1]++;
+    }
+    this.setState({
+      scores: scores,
+    });
+  }
+
+  resetScore(){
+    const scores = this.state.scores.slice()
+    scores[0] = 0;
+    scores[1] = 0;
+    this.setState({
+      scores: scores,
+    });
   }
 
   render() {
@@ -184,7 +179,9 @@ class Game extends React.Component {
       <div className="game">
         <div className="game-board">
           <Button value='Reset Game' onClick={() => this.newGame()}/>
-          <Board players={this.props.players}  />
+          <Button value='Reset Statistics' onClick={() => this.resetScore()}/>
+          <Board players={this.props.players} scores={this.state.scores} refreshScore={this.refreshScore}/>
+          <div><p>{this.props.players.player1+' '+this.state.scores[0]+' vs '+this.state.scores[1]+' '+this.props.players.player2}</p></div>
         </div>
         <div className="game-info">
           <div></div>
@@ -201,12 +198,9 @@ class Counter extends React.Component {
     this.state = {
       seconds: 10
     };
-
     this.counter = 0;
-
     this.countDown = this.countDown.bind(this)
     this.handleClick = this.handleClick.bind(this)
-
   }
 
   componentWillMount(){
@@ -217,12 +211,9 @@ class Counter extends React.Component {
 
   countDown() {
     let seconds = this.state.seconds - 1;
-
     this.setState({
       seconds: seconds,
     });
-
-
     if (seconds <= 0) {
       clearInterval(this.counter);
       this.props.onZero();
@@ -255,7 +246,6 @@ class StartForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {player1: '', player2: ''};
-
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
@@ -303,6 +293,7 @@ class App extends React.Component {
       started : false
     };
   }
+
   _handleStartFormSubmit(players) {
     //console.log(players)
     this.setState({
@@ -339,7 +330,6 @@ ReactDOM.render(
 
 
 function setPlayers(player1, player2){
-
   if(player1 !== null && player1 === player2) {
     player1 = player1 + ' (X)'
     player2 = player2 + ' (O)'
@@ -348,9 +338,7 @@ function setPlayers(player1, player2){
     player1 = 'X'
   if (player2 === null || player2 === '')
     player2 = 'O'
-
     return {player1: player1, player2: player2}
-
 }
 
 function calculateWinner(squares, players) {
