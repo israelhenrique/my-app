@@ -32,6 +32,9 @@ class Board extends React.Component {
       winner: null,
     };
     this.newMatch = this.newMatch.bind(this);
+    this.turnTimeOut = this.turnTimeOut.bind(this);
+    this.turnTime = 10
+
   }
 
   /*refreshScore(winner){
@@ -95,6 +98,16 @@ class Board extends React.Component {
       value={this.state.squares[i]} color={this.state.squaresColor[i]} onClick={() => this.handleClick(i)} />;
   }
 
+  turnTimeOut(){
+    if (this.state.xIsNext){
+        this.props.refreshScore(this.props.players.player2)
+    } else {
+        this.props.refreshScore(this.props.players.player1)
+    }
+    this.turnTime = 10;
+    this.newMatch();
+  }
+
   render() {
     const winner = this.state.winner;
     let status;
@@ -118,7 +131,9 @@ class Board extends React.Component {
               <a href="#" onClick={this.newMatch}>Restart now!</a>
             </div>
           ) : (
-            ''
+            <div>
+              <p>Your turn will end in <Counter onZero={this.turnTimeOut} startTime={this.turnTime}/> seconds... </p>
+            </div>
           )}
         </div>
         <br />
@@ -196,22 +211,27 @@ class Game extends React.Component {
 }
 
 class Counter extends React.Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
-      seconds: 0
+      seconds: props.startTime
     };
-    this.counter = 0;
+
+    this.counter = null
+
     this.countDown = this.countDown.bind(this)
   }
 
-  componentWillMount(){
-    this.setState({
-      seconds: this.props.startTime,
-    });
-    if (this.counter === 0) {
-      this.counter = setInterval(this.countDown,1000)
+  createCounter() {
+    this.counter = setInterval(this.countDown, 1000)
+  }
+
+  clearCounter() {
+    if (!this.counter) {
+      return
     }
+    clearInterval(this.counter);
+    this.counter = null
   }
 
   countDown() {
@@ -220,13 +240,26 @@ class Counter extends React.Component {
       seconds: seconds,
     });
     if (seconds <= 0) {
-      clearInterval(this.counter);
+      this.clearCounter()
       this.props.onZero();
     }
   }
 
-  componentWillUnmount(){
-    clearInterval(this.counter);
+  componentWillReceiveProps(nextProps){
+    this.clearCounter()
+    this.setState({
+      seconds: this.props.startTime
+    })
+    this.createCounter()
+  }
+
+  componentWillMount(){
+    this.createCounter()
+  }
+
+  componentWillUnmount() {
+    console.log('entrou')
+    this.clearCounter()
   }
 
   render(){
