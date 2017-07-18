@@ -31,11 +31,13 @@ class Board extends React.Component {
       squaresColor: Array(9).fill(null),
       movesCount: 0,
       winner: null,
+      divStyle: {background: 'white'},
     };
     this.newMatch = this.newMatch.bind(this);
     this.turnTimeOut = this.turnTimeOut.bind(this);
+    this.handleEvent = this.handleEvent.bind(this)
     this.turnTime = 10
-
+    this.turnNumber = 0;
   }
 
   /*refreshScore(winner){
@@ -70,12 +72,14 @@ class Board extends React.Component {
       if (winner !== null){
         this.props.refreshScore(winner)
       }
+      this.turnNumber++;
       this.setState({
         squares: squares,
         xIsNext: !this.state.xIsNext,
         squaresColor: squaresColor,
         movesCount: this.state.movesCount+1,
-        winner: winner
+        winner: winner,
+        divStyle: {background: 'white'},
       });
   }
 
@@ -90,6 +94,7 @@ class Board extends React.Component {
       movesCount: 0,
       winner: null,
       seconds: 10,
+      divStyle: {background: 'white'},
     });
 
   }
@@ -105,11 +110,27 @@ class Board extends React.Component {
     } else {
         this.props.refreshScore(this.props.players.player1)
     }
-    this.turnTime = 10;
+    this.turnNumber++
     this.newMatch();
   }
 
+  handleEvent(seconds){
+    if (seconds < this.turnTime/2 && seconds > this.turnTime/4){
+      this.setState({
+        divStyle: {background: 'orange'},
+      });
+      console.log('entrou')
+    } else if (seconds < this.turnTime/4) {
+      this.setState({
+        divStyle: {background: 'red'},
+      });
+    }
+
+
+  }
+
   render() {
+    console.log(this.turnNumber)
     const winner = this.state.winner;
     let status;
     let restart = false;
@@ -123,7 +144,7 @@ class Board extends React.Component {
       restart = true;
     }
     return (
-      <div>
+      <div style={this.state.divStyle}>
         <div className="status">{status}</div>
         <div>
           {restart ? (
@@ -133,7 +154,7 @@ class Board extends React.Component {
             </div>
           ) : (
             <div>
-              <p>Your turn will end in <Counter onZero={this.turnTimeOut} startTime={this.turnTime}/> seconds... </p>
+              <p>Your turn will end in <Counter onZero={this.turnTimeOut} counterKey={this.turnNumber} onTick={this.handleEvent} startTime={this.turnTime}/> seconds... </p>
             </div>
           )}
         </div>
@@ -224,6 +245,7 @@ class Counter extends React.Component {
   }
 
   createCounter() {
+    console.log(this.props.counterKey)
     this.counter = setInterval(this.countDown, 1000)
   }
 
@@ -240,18 +262,23 @@ class Counter extends React.Component {
     this.setState({
       seconds: seconds,
     });
+    if (this.props.onTick)
+      this.props.onTick(seconds)
     if (seconds <= 0) {
       this.clearCounter()
       this.props.onZero();
     }
   }
 
+
   componentWillReceiveProps(nextProps){
-    this.clearCounter()
-    this.setState({
-      seconds: this.props.startTime
-    })
-    this.createCounter()
+    if (this.props.counterKey !== nextProps.counterKey) {
+      this.clearCounter()
+      this.setState({
+        seconds: this.props.startTime
+      })
+      this.createCounter()
+    }
   }
 
   componentWillMount(){
@@ -259,7 +286,6 @@ class Counter extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('entrou')
     this.clearCounter()
   }
 
