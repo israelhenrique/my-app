@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://israelhenrique.github.io/my-app",
   "dependencies": {
+    "normalize.css": "^7.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-modal": "^2.0.6"
